@@ -1,6 +1,6 @@
 package com.app.misgastos.model;
 
-public enum AmountTypeEnum {
+public enum TransactionTypeEnum {
     EXPEND(1, "Expent"),
     INCOME (2, "Income"),
     TRANSFER (3, "Transfer");
@@ -9,7 +9,7 @@ public enum AmountTypeEnum {
     private int id;
     private String description;
 
-    AmountTypeEnum(int id, String description) {
+    TransactionTypeEnum(int id, String description) {
         this.id = id;
         this.description = description;
     }
@@ -30,14 +30,14 @@ public enum AmountTypeEnum {
         this.description = description;
     }
 
-    public static AmountTypeEnum getFromId(int v){
+    public static TransactionTypeEnum getFromId(int v){
         switch (v) {
             case 1:
-                return AmountTypeEnum.EXPEND;
+                return TransactionTypeEnum.EXPEND;
             case 2:
-                return AmountTypeEnum.INCOME;
+                return TransactionTypeEnum.INCOME;
             case 3:
-                return AmountTypeEnum.TRANSFER;
+                return TransactionTypeEnum.TRANSFER;
             default:
                 return null;
         }

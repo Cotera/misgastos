@@ -3,8 +3,8 @@ package com.app.misgastos.model.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ANOTATION")
-public class AnnotationEntity {
+@Table(name = "TRANSACTION")
+public class TransactionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +20,9 @@ public class AnnotationEntity {
     @Column (name = "TYPE")
     private Integer type;
 
-    public AnnotationEntity() {}
+    public TransactionEntity() {}
 
-    public AnnotationEntity(Long id, String description, Float amount, Integer type) {
+    public TransactionEntity(Long id, String description, Float amount, Integer type) {
         this.id = id;
         this.description = description;
         this.amount = amount;

@@ -1,7 +1,7 @@
 package com.app.misgastos.web;
 
-import com.app.misgastos.model.AnnotacionDto;
-import com.app.misgastos.services.impl.AnnotationServiceImpl;
+import com.app.misgastos.model.TransactionDto;
+import com.app.misgastos.services.impl.TransactionServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,24 +13,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/annotation")
-public class AnnotationController {
-    Logger log = LoggerFactory.getLogger(AnnotationController.class);
+@RequestMapping("/transaction")
+public class TransactionController {
+    Logger log = LoggerFactory.getLogger(TransactionController.class);
 
     @Autowired
-    private AnnotationServiceImpl annotationService;
+    private TransactionServiceImpl transactionService;
 
     @PostMapping
-    public ResponseEntity<AnnotacionDto> create(@RequestBody AnnotacionDto annotacionDto){
-        log.info("Creating object with id: " + annotacionDto.getId());
-        annotationService.createAnotation(annotacionDto);
-        return ResponseEntity.ok(annotacionDto);
+    public ResponseEntity<TransactionDto> create(@RequestBody TransactionDto transactionDto){
+        log.info("Creating object with id: " + transactionDto.getId());
+        transactionService.createTransaction(transactionDto);
+        return ResponseEntity.ok(transactionDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AnnotacionDto> getById(@PathVariable("id") Long id){
+    public ResponseEntity<TransactionDto> getById(@PathVariable("id") Long id){
         log.info("Searching for object with id: " + id);
-        Optional<AnnotacionDto> annotacion = annotationService.getById(id);
+        Optional<TransactionDto> annotacion = transactionService.getById(id);
 
         if (annotacion.isPresent()) {
             return ResponseEntity.ok(annotacion.get());

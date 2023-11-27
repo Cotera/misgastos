@@ -3,13 +3,12 @@ package com.app.misgastos.model;
 import lombok.Data;
 
 @Data
-public class AnnotacionDto {
+public class TransactionDto {
 
     private Long id;
     private String description;
     private Float amount;
 
-    private AmountTypeEnum type;
-
+    private TransactionTypeEnum type;
 
 }

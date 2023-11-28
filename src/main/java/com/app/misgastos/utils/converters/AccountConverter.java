@@ -17,7 +17,9 @@ public class AccountConverter {
         AccountDto dto = new AccountDto();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
-        dto.setCurrency(Currency.getInstance(entity.getCurrency()));
+        if (Objects.nonNull(entity.getCurrency())) {
+            dto.setCurrency(Currency.getInstance(entity.getCurrency()));
+        }
         dto.setTransactions(null);
         return dto;
     }
@@ -34,6 +36,9 @@ public class AccountConverter {
     }
 
     public static List<AccountDto> toDtos(List<AccountEntity> entities) {
+        if (Objects.isNull(entities)){
+            return null;
+        }
         List<AccountDto> dtos = new ArrayList<>();
         for (AccountEntity entity : entities) {
             dtos.add(toDto(entity));
@@ -42,6 +47,9 @@ public class AccountConverter {
     }
 
     public static List<AccountEntity> toEntities(List<AccountDto> dtos) {
+        if (Objects.isNull(dtos)){
+            return null;
+        }
         List<AccountEntity> entities = new ArrayList<>();
         for (AccountDto dto : dtos) {
             entities.add(toEntity(dto));

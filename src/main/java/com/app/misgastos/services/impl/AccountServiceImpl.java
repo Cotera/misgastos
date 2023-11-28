@@ -39,10 +39,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deleteById(Long id) throws Exception {
-        if (accountRepository.findById(id).isPresent()){
-            accountRepository.deleteById(id);
+        if (accountRepository.findById(id).isEmpty()) {
+            throw new Exception("Id no encontrado " + id);
         }
-        throw new Exception("Id no encontrado + " + id);
+        accountRepository.deleteById(id);
     }
 
     @Override

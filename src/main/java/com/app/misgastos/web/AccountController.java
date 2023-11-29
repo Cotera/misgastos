@@ -1,6 +1,7 @@
 package com.app.misgastos.web;
 
 import com.app.misgastos.model.AccountDto;
+import com.app.misgastos.services.AccountService;
 import com.app.misgastos.services.impl.AccountServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import java.util.Optional;
 public class AccountController {
 
     @Autowired
-    private AccountServiceImpl accountService;
+    private AccountService accountService;
 
 
     @PostMapping

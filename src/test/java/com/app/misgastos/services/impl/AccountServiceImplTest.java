@@ -20,7 +20,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -99,9 +101,10 @@ public class AccountServiceImplTest {
         accountService.deleteById(givenId);
 
         // then
-        verify(accountRepository).deleteById(givenId);
-        verifyNoMoreInteractions();
-        // Mañana te recalco esto en clase, pero al no tener datos del delete para hacer assertions, simplemente verificamos que el metodo delete del repositorio es llamado
+        verify(accountRepository, times(1)).findById(givenId);
+        verify(accountRepository, times(1)).deleteById(givenId);
+        verifyNoMoreInteractions(accountRepository);
+        // al no tener datos del delete para hacer assertions, simplemente verificamos que el metodo delete del repositorio es llamado
     }
 
     @Test (expected = Exception.class) // debemnos indicar el tipo de excepcion esperado, ya que si hay otra excepcion difetenre (como NullPointerException) el test dará incorrecto.
@@ -116,6 +119,7 @@ public class AccountServiceImplTest {
         accountService.deleteById(givenId);
 
         // then
+        verifyNoInteractions(accountRepository);
     }
 
     @Test

@@ -18,7 +18,7 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionRepository transactionRepository;
 
     @Override
-    public void createTransaction(TransactionDto transactionDto) {
+    public TransactionEntity createTransaction(TransactionDto transactionDto) {
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setId(transactionDto.getId());
         transactionEntity.setDescription(transactionDto.getDescription());
@@ -26,11 +26,12 @@ public class TransactionServiceImpl implements TransactionService {
 
         transactionEntity.setType(transactionDto.getType().getId());
 
-        transactionRepository.save(transactionEntity);
+        return transactionRepository.save(transactionEntity);
+        
     }
 
     @Override
-    public Optional<TransactionDto> getById(Long id) {
+    public Optional<TransactionDto> getById(Long id) {  //metodo a probar 
         Optional<TransactionEntity> annotationEntityOpt = transactionRepository.findById(id);
 
         if (annotationEntityOpt.isPresent()) {

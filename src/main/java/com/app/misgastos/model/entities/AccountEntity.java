@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ACCOUNT")
 @Data
-public class AccountEntity {
+public class AccountEntity { //reppasar esto mañana contra la base de datos 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

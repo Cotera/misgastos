@@ -1,13 +1,14 @@
 package com.app.misgastos.services;
 
 import com.app.misgastos.model.TransactionDto;
+import com.app.misgastos.model.entities.TransactionEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TransactionService {
 
-    void createTransaction(TransactionDto transactionDto);
+    TransactionEntity createTransaction(TransactionDto transactionDto);
 
     Optional<TransactionDto> getById(Long id);
 

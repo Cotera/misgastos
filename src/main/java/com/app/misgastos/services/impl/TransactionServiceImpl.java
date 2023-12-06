@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -39,10 +40,12 @@ public class TransactionServiceImpl implements TransactionService {
             transactionDto.setId(transactionEntityOpt.get().getId());
             transactionDto.setDescription(transactionEntityOpt.get().getDescription());
             transactionDto.setAmount(transactionEntityOpt.get().getAmount());
-            transactionDto.setType(
-                    TransactionTypeEnum.getFromId(
-                            transactionEntityOpt.get().getType()
-                    ));
+            if ( Objects.nonNull(transactionEntityOpt.get().getType()) ) {
+                transactionDto.setType(
+                        TransactionTypeEnum.getFromId(
+                                transactionEntityOpt.get().getType()
+                        ));
+            }
             return Optional.of(transactionDto);
         }
 

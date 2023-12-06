@@ -67,7 +67,7 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    public void testDeleteById_returnsDeletedId_whenTransactionExists() throws Exception { //
+    public void testDeleteById_returnsDeletedId_whenTransactionExists() throws Exception {
         // arrange
         Long givendId = 1L;
         TransactionEntity transactionFound = new TransactionEntity();
@@ -87,7 +87,7 @@ public class TransactionServiceImplTest {
     }
 
     @Test(expected = Exception.class)
-    public void testDeleteById_throwsException_whenTransacitionNotExists() throws Exception { //
+    public void testDeleteById_throwsException_whenTransacitionNotExists() throws Exception {
         // arrange
         Long givendId = 1L;
 
@@ -126,7 +126,7 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    public void testGetById() { //metodo de test
+    public void testGetById() {
         //give
         Long givenID = 1L;
 
@@ -141,14 +141,10 @@ public class TransactionServiceImplTest {
         expected.setDescription("description");
         //when 
 
-        Optional<TransactionDto> result = transactionService.getById(givenID); 
-        
-
+        Optional<TransactionDto> result = transactionService.getById(givenID);
 
         // Then
-        assertEquals( expected, result);
-
-
+        assertEquals( expected, result.get());
     }
 
     @Test

@@ -27,11 +27,11 @@ public class TransactionServiceImpl implements TransactionService {
         transactionEntity.setType(transactionDto.getType().getId());
 
         return transactionRepository.save(transactionEntity);
-        
+
     }
 
     @Override
-    public Optional<TransactionDto> getById(Long id) {  //metodo a probar 
+    public Optional<TransactionDto> getById(Long id) {  //metodo a probar
         Optional<TransactionEntity> transactionEntityOpt = transactionRepository.findById(id);
 
         if (transactionEntityOpt.isPresent()) {
@@ -56,7 +56,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Long deleteById(Long id) throws Exception {
-        Optional<TransactionDto> transaccionEncontrada = this.getById(id); 
+        Optional<TransactionDto> transaccionEncontrada = this.getById(id);
         if (transaccionEncontrada.isEmpty()) {
             throw new Exception("No existe transacción " + id);
         }

@@ -46,9 +46,9 @@ public class AccountController {
 
     @GetMapping("{id}")
     public ResponseEntity<AccountDto> getById(@PathVariable("id") Long id){
-        Optional<AccountDto> foundAccount = accountService.getById(id);
-        if (foundAccount.isPresent()) {
-            return ResponseEntity.ok(foundAccount.get());
+        AccountDto foundAccount = accountService.getById(id);
+        if (foundAccount!=null) {
+            return ResponseEntity.ok(foundAccount);
         } else {
             return ResponseEntity.notFound().build();
         }

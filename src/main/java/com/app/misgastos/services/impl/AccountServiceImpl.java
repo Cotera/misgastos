@@ -26,9 +26,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Optional<AccountDto> getById(Long id) {
+    public AccountDto getById(Long id) {
         AccountEntity accountEntity = accountRepository.findById(id).orElse(null);
-        return Optional.ofNullable(AccountConverter.toDto(accountEntity));
+        return AccountConverter.toDto(accountEntity);
     }
 
     @Override
@@ -47,15 +47,26 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto update(Long id, AccountDto accountDto) throws Exception {
-        Optional<AccountEntity> existentAccountO = accountRepository.findById(id);
+        return null;
+    }
+  /*      if (Objects.isNull(id) || Objects.isNull(accountDto)) {
+            throw new Exception("Datos no encontrados para actualizar.");
+        }
 
-        AccountEntity existentAccount =
-                existentAccountO.orElseThrow(() -> new Exception("Id no encontrado " + id));
+        AccountEntity existentAccountO = accountRepository.findById(id).orElse(null);
+
+
 
         existentAccount.setName(accountDto.getName());
-        existentAccount.setCurrency(accountDto.getCurrency().getCurrencyCode());
+        if (Objects.nonNull(accountDto.getCurrency())) {
+            existentAccount.setCurrency(accountDto.getCurrency().getCurrencyCode());
+            }
 
         AccountEntity updatedAccount = accountRepository.save(existentAccount);
         return AccountConverter.toDto(updatedAccount);
+    }//*/
+
+    private void asistenteDeUpdate() {
+
     }
 }

@@ -9,7 +9,7 @@ public interface AccountService {
 
     Optional<AccountDto> createAccount(AccountDto accountDto);
 
-    Optional<AccountDto> getById(Long id);
+    AccountDto getById(Long id);
 
     List<AccountDto> getAll();
 

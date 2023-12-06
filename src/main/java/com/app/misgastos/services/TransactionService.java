@@ -12,9 +12,9 @@ public interface TransactionService {
 
     Optional<TransactionDto> getById(Long id);
 
-    List<TransactionDto> getAll();
+    List<TransactionEntity> getAll();
 
-    Long deleteById(Long id);
+    Long deleteById(Long id) throws Exception;
 
     /**
      * Uptade of an Annotation into Database

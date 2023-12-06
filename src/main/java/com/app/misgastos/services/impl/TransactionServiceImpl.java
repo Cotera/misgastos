@@ -32,16 +32,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Optional<TransactionDto> getById(Long id) {  //metodo a probar 
-        Optional<TransactionEntity> annotationEntityOpt = transactionRepository.findById(id);
+        Optional<TransactionEntity> transactionEntityOpt = transactionRepository.findById(id);
 
-        if (annotationEntityOpt.isPresent()) {
+        if (transactionEntityOpt.isPresent()) {
             TransactionDto transactionDto = new TransactionDto();
-            transactionDto.setId(annotationEntityOpt.get().getId());
-            transactionDto.setDescription(annotationEntityOpt.get().getDescription());
-            transactionDto.setAmount(annotationEntityOpt.get().getAmount());
+            transactionDto.setId(transactionEntityOpt.get().getId());
+            transactionDto.setDescription(transactionEntityOpt.get().getDescription());
+            transactionDto.setAmount(transactionEntityOpt.get().getAmount());
             transactionDto.setType(
                     TransactionTypeEnum.getFromId(
-                            annotationEntityOpt.get().getType()
+                            transactionEntityOpt.get().getType()
                     ));
             return Optional.of(transactionDto);
         }
@@ -50,13 +50,18 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionDto> getAll() {
-        return null;
-    }
+    public List<TransactionEntity> getAll() {
+        return transactionRepository.findAll();
+        }
 
     @Override
-    public Long deleteById(Long id) {
-        return null;
+    public Long deleteById(Long id) throws Exception {
+        Optional<TransactionDto> transaccionEncontrada = this.getById(id); 
+        if (transaccionEncontrada.isEmpty()) {
+            throw new Exception("No existe transacción " + id);
+        }
+        transactionRepository.deleteById(id);
+        return id;
     }
 
     @Override

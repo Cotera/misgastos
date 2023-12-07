@@ -1,31 +1,31 @@
 package com.app.misgastos.services.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import com.app.misgastos.model.TransactionDto;
+import com.app.misgastos.model.TransactionTypeEnum;
+import com.app.misgastos.model.entities.TransactionEntity;
+import com.app.misgastos.repository.TransactionRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.app.misgastos.model.TransactionDto;
-import com.app.misgastos.model.TransactionTypeEnum;
-import com.app.misgastos.model.entities.TransactionEntity;
-import com.app.misgastos.repository.TransactionRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(SpringRunner.class)
@@ -45,7 +45,6 @@ public class TransactionServiceImplTest {
 
     @Test
     public void testCreateTransaction() {
-
         TransactionDto transactionDto = new TransactionDto();
         transactionDto.setId(1L);
         transactionDto.setDescription("description");
@@ -59,11 +58,11 @@ public class TransactionServiceImplTest {
         transactionEntity.setType(1);
 
 
-        when(transactionRepository.save(transactionEntity)).thenReturn(transactionEntity);
+        when(transactionRepository.save(any(TransactionEntity.class))).thenReturn(transactionEntity);
 
         TransactionEntity result = transactionService.createTransaction(transactionDto);
 
-        assertEquals(transactionEntity, result);        
+        assertEquals(transactionEntity, result);
     }
 
     @Test
@@ -76,26 +75,32 @@ public class TransactionServiceImplTest {
         transactionFound.setAmount(3.6F);
         transactionFound.setDescription("Description");
 
-        when(transactionRepository.findById(givendId)).thenReturn(Optional.of(transactionFound));
+        when(transactionRepository.findById(same(givendId)))
+                .thenReturn(Optional.of(transactionFound));
+
         doNothing().when(transactionRepository).deleteById(givendId);
-        // test 
+        // test Exception
         Long result = transactionService.deleteById(givendId);
         
         // assert
         assertEquals(givendId, result);
         verify(transactionRepository, times(1)).deleteById(givendId);
+        verify(transactionRepository, times(1)).findById(givendId);
+        verifyNoMoreInteractions(transactionRepository);
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testDeleteById_throwsException_whenTransacitionNotExists() throws Exception {
         // arrange
         Long givendId = 1L;
 
         when(transactionRepository.findById(givendId)).thenReturn(Optional.empty());
 
-        // test 
-        transactionService.deleteById(givendId);
+        // test
+        Exception result = assertThrows(Exception.class, () -> transactionService.deleteById(givendId));
+
         // assert
+        assertEquals("No existe transacción " + givendId, result.getMessage());
         verify(transactionRepository, times(1)).findById(givendId);
         verifyNoMoreInteractions(transactionRepository);
     }
@@ -139,12 +144,13 @@ public class TransactionServiceImplTest {
         TransactionDto expected = new TransactionDto();
         expected.setId(givenID);
         expected.setDescription("description");
-        //when 
 
+        //when
         Optional<TransactionDto> result = transactionService.getById(givenID);
 
         // Then
-        assertEquals( expected, result.get());
+        assertNotNull(result.get());
+        assertEquals(expected, result.get());
     }
 
     @Test

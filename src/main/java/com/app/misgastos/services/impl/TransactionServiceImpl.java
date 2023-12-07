@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
+
+import static java.util.Objects.nonNull;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -25,10 +27,11 @@ public class TransactionServiceImpl implements TransactionService {
         transactionEntity.setDescription(transactionDto.getDescription());
         transactionEntity.setAmount(transactionDto.getAmount());
 
-        transactionEntity.setType(transactionDto.getType().getId());
+        if (nonNull(transactionDto.getType())) {
+            transactionEntity.setType(transactionDto.getType().getId());
+        }
 
         return transactionRepository.save(transactionEntity);
-
     }
 
     @Override
@@ -40,7 +43,7 @@ public class TransactionServiceImpl implements TransactionService {
             transactionDto.setId(transactionEntityOpt.get().getId());
             transactionDto.setDescription(transactionEntityOpt.get().getDescription());
             transactionDto.setAmount(transactionEntityOpt.get().getAmount());
-            if ( Objects.nonNull(transactionEntityOpt.get().getType()) ) {
+            if ( nonNull(transactionEntityOpt.get().getType()) ) {
                 transactionDto.setType(
                         TransactionTypeEnum.getFromId(
                                 transactionEntityOpt.get().getType()
@@ -69,6 +72,15 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionDto update(Long id, TransactionDto transactionDto) {
+        Optional<TransactionDto> transaccionEncontrada = this.getById(id);
+
+        transaccionEncontrada.ifPresent(this.actualizaTransaccion());
+
+
+        return null;
+    }
+
+    private Consumer<? super TransactionDto> actualizaTransaccion() {
         return null;
     }
 }

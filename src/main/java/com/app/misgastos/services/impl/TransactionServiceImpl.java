@@ -71,16 +71,19 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionDto update(Long id, TransactionDto transactionDto) {
-        Optional<TransactionDto> transaccionEncontrada = this.getById(id);
+    public TransactionEntity update(Long id, TransactionDto transactionDto) throws Exception {
+        this.getById(id)
+                .orElseThrow(() -> new Exception("Error al Actualizar. No existe la transacción " + id ));
 
-        transaccionEncontrada.ifPresent(this.actualizaTransaccion());
+        TransactionEntity saveTransaction = new TransactionEntity();
+        saveTransaction.setId(id);
+        saveTransaction.setDescription(transactionDto.getDescription());
+        saveTransaction.setAmount(transactionDto.getAmount());
+        if (nonNull(transactionDto.getType())) {
+            saveTransaction.setType(transactionDto.getType().getId());
+        }
 
-
-        return null;
+        return transactionRepository.save(saveTransaction);
     }
 
-    private Consumer<? super TransactionDto> actualizaTransaccion() {
-        return null;
-    }
 }

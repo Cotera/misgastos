@@ -22,6 +22,6 @@ public interface TransactionService {
      * @param transactionDto new data to update
      * @return updated element
      */
-    TransactionDto update(Long id, TransactionDto transactionDto);
+    TransactionEntity update(Long id, TransactionDto transactionDto) throws Exception;
 
 }

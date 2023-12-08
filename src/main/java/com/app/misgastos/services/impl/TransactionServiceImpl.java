@@ -1,7 +1,7 @@
 package com.app.misgastos.services.impl;
 
-import com.app.misgastos.model.TransactionTypeEnum;
 import com.app.misgastos.model.TransactionDto;
+import com.app.misgastos.model.TransactionTypeEnum;
 import com.app.misgastos.model.entities.TransactionEntity;
 import com.app.misgastos.repository.TransactionRepository;
 import com.app.misgastos.services.TransactionService;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static java.util.Objects.nonNull;
 
@@ -35,7 +34,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Optional<TransactionDto> getById(Long id) {  //metodo a probar
+    public Optional<TransactionDto> getById(Long id) {
         Optional<TransactionEntity> transactionEntityOpt = transactionRepository.findById(id);
 
         if (transactionEntityOpt.isPresent()) {
@@ -82,7 +81,6 @@ public class TransactionServiceImpl implements TransactionService {
         if (nonNull(transactionDto.getType())) {
             saveTransaction.setType(transactionDto.getType().getId());
         }
-
         return transactionRepository.save(saveTransaction);
     }
 

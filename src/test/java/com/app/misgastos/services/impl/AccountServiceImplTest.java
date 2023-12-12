@@ -176,7 +176,7 @@ public class AccountServiceImplTest {
 
 
         // when
-        AccountDto actualAccountResult = accountService.update(givenId, null);
+        AccountDto actualAccountResult = accountService.update(givenId, givenAccountDto);
 
         // then
         assertEquals(givenAccountDto, actualAccountResult);

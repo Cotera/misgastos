@@ -1,9 +1,17 @@
 package com.app.misgastos.model.entities;
 
-import javax.persistence.*;
+import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "TRANSACTION")
+@Data
 public class TransactionEntity {
 
     @Id
@@ -20,44 +28,6 @@ public class TransactionEntity {
     @Column (name = "TYPE")
     private Integer type;
 
-    public TransactionEntity() {}
-
-    public TransactionEntity(Long id, String description, Float amount, Integer type) {
-        this.id = id;
-        this.description = description;
-        this.amount = amount;
-        this.type = type;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Float getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Float amount) {
-        this.amount = amount;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
+    @Column (name = "ACCOUNT")
+    private Long account;
 }

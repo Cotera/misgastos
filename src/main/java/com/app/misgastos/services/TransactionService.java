@@ -1,18 +1,17 @@
 package com.app.misgastos.services;
 
 import com.app.misgastos.model.TransactionDto;
-import com.app.misgastos.model.entities.TransactionEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TransactionService {
 
-    TransactionEntity createTransaction(TransactionDto transactionDto);
+    TransactionDto createTransaction(TransactionDto transactionDto) throws Exception;
 
     Optional<TransactionDto> getById(Long id);
 
-    List<TransactionEntity> getAll();
+    List<TransactionDto> getAll();
 
     Long deleteById(Long id) throws Exception;
 
@@ -22,6 +21,8 @@ public interface TransactionService {
      * @param transactionDto new data to update
      * @return updated element
      */
-    TransactionEntity update(Long id, TransactionDto transactionDto) throws Exception;
+    TransactionDto update(Long id, TransactionDto transactionDto) throws Exception;
+
+    List<TransactionDto> getAllTransactionsByAccount(Long accountId);
 
 }

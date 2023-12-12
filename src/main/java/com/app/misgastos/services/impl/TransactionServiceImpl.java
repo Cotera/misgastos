@@ -1,17 +1,19 @@
 package com.app.misgastos.services.impl;
 
+import com.app.misgastos.model.AccountDto;
 import com.app.misgastos.model.TransactionDto;
-import com.app.misgastos.model.TransactionTypeEnum;
 import com.app.misgastos.model.entities.TransactionEntity;
 import com.app.misgastos.repository.TransactionRepository;
+import com.app.misgastos.services.AccountService;
 import com.app.misgastos.services.TransactionService;
+import com.app.misgastos.utils.converters.TransactionConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.nonNull;
+import static java.util.Objects.isNull;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -19,18 +21,16 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private AccountService accountService;
+
     @Override
-    public TransactionEntity createTransaction(TransactionDto transactionDto) {
-        TransactionEntity transactionEntity = new TransactionEntity();
-        transactionEntity.setId(transactionDto.getId());
-        transactionEntity.setDescription(transactionDto.getDescription());
-        transactionEntity.setAmount(transactionDto.getAmount());
-
-        if (nonNull(transactionDto.getType())) {
-            transactionEntity.setType(transactionDto.getType().getId());
+    public TransactionDto createTransaction(TransactionDto transactionDto) throws Exception {
+        if (isNull(transactionDto)) {
+            throw new Exception("Datos incorrectos");
         }
-
-        return transactionRepository.save(transactionEntity);
+        TransactionEntity transactionEntity = TransactionConverter.toEntity(transactionDto);
+        return TransactionConverter.toDto(transactionRepository.save(transactionEntity));
     }
 
     @Override
@@ -38,16 +38,12 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<TransactionEntity> transactionEntityOpt = transactionRepository.findById(id);
 
         if (transactionEntityOpt.isPresent()) {
-            TransactionDto transactionDto = new TransactionDto();
-            transactionDto.setId(transactionEntityOpt.get().getId());
-            transactionDto.setDescription(transactionEntityOpt.get().getDescription());
-            transactionDto.setAmount(transactionEntityOpt.get().getAmount());
-            if ( nonNull(transactionEntityOpt.get().getType()) ) {
-                transactionDto.setType(
-                        TransactionTypeEnum.getFromId(
-                                transactionEntityOpt.get().getType()
-                        ));
-            }
+            TransactionDto transactionDto = TransactionConverter.toDto(transactionEntityOpt.get());
+
+            Long accountId = transactionEntityOpt.get().getAccount();
+            AccountDto account = accountService.getById(accountId);
+            transactionDto.setAccountDto(account);
+
             return Optional.of(transactionDto);
         }
 
@@ -55,9 +51,9 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionEntity> getAll() {
-        return transactionRepository.findAll();
-        }
+    public List<TransactionDto> getAll() {
+        return TransactionConverter.toDtos(transactionRepository.findAll());
+    }
 
     @Override
     public Long deleteById(Long id) throws Exception {
@@ -70,18 +66,22 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionEntity update(Long id, TransactionDto transactionDto) throws Exception {
-        this.getById(id)
-                .orElseThrow(() -> new Exception("Error al Actualizar. No existe la transacción " + id ));
-
-        TransactionEntity saveTransaction = new TransactionEntity();
-        saveTransaction.setId(id);
-        saveTransaction.setDescription(transactionDto.getDescription());
-        saveTransaction.setAmount(transactionDto.getAmount());
-        if (nonNull(transactionDto.getType())) {
-            saveTransaction.setType(transactionDto.getType().getId());
+    public TransactionDto update(Long id, TransactionDto transactionDto) throws Exception {
+        if (isNull(id) || isNull(transactionDto)) {
+            throw new Exception("No hay datos válidos para actualizar.");
         }
-        return transactionRepository.save(saveTransaction);
+        this.getById(id)
+                .orElseThrow(() -> new Exception("Error al Actualizar. No existe la transacción " + id));
+
+        TransactionEntity saveTransaction = TransactionConverter.toEntity(transactionDto);
+        saveTransaction.setId(id);
+
+        return TransactionConverter.toDto(transactionRepository.save(saveTransaction));
+    }
+
+    @Override
+    public List<TransactionDto> getAllTransactionsByAccount(Long accountId) {
+        return TransactionConverter.toDtos(transactionRepository.getByAccountId(accountId));
     }
 
 }

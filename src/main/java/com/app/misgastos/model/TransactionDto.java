@@ -11,4 +11,6 @@ public class TransactionDto {
 
     private TransactionTypeEnum type;
 
+    private AccountDto accountDto;
+
 }

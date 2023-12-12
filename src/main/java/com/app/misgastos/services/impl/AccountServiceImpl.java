@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -47,24 +48,17 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto update(Long id, AccountDto accountDto) throws Exception {
-        return null;
-    }
-  /*      if (Objects.isNull(id) || Objects.isNull(accountDto)) {
+        if (Objects.isNull(id) || Objects.isNull(accountDto)) {
             throw new Exception("Datos no encontrados para actualizar.");
         }
-
-        AccountEntity existentAccountO = accountRepository.findById(id).orElse(null);
-
-
-
+        AccountEntity existentAccount = accountRepository.findById(id)
+                .orElseThrow(() -> new Exception("El id que se quiere actalizar no existe: " + id));
         existentAccount.setName(accountDto.getName());
         if (Objects.nonNull(accountDto.getCurrency())) {
             existentAccount.setCurrency(accountDto.getCurrency().getCurrencyCode());
-            }
-
-        AccountEntity updatedAccount = accountRepository.save(existentAccount);
-        return AccountConverter.toDto(updatedAccount);
-    }//*/
+        }
+        return AccountConverter.toDto(accountRepository.save(existentAccount));
+    }
 
     private void asistenteDeUpdate() {
 

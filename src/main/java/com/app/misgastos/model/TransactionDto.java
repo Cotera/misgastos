@@ -7,7 +7,7 @@ public class TransactionDto {
 
     private Long id;
     private String description;
-    private Float amount;
+    private Double amount;
 
     private TransactionTypeEnum type;
 

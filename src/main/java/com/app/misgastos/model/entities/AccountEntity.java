@@ -24,4 +24,7 @@ public class AccountEntity { //reppasar esto mañana contra la base de datos
 
     @Column (name = "CURRENCY")
     private String currency;
+
+    @Column (name = "INITIAL_BALANCE")
+    private Double initialBalance;
 }

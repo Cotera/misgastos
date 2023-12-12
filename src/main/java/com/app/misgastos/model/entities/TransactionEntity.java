@@ -23,7 +23,7 @@ public class TransactionEntity {
     private String description;
 
     @Column (name = "AMOUNT")
-    private Float amount;
+    private Double amount;
 
     @Column (name = "TYPE")
     private Integer type;

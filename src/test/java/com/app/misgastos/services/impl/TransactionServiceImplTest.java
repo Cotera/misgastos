@@ -49,13 +49,13 @@ public class TransactionServiceImplTest {
         TransactionDto transactionDto = new TransactionDto();
         transactionDto.setId(1L);
         transactionDto.setDescription("description");
-        transactionDto.setAmount(1.2F);
+        transactionDto.setAmount(1.2);
         transactionDto.setType(TransactionTypeEnum.EXPEND);
 
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setId(1L);
         transactionEntity.setDescription("description");
-        transactionEntity.setAmount(1.2F);
+        transactionEntity.setAmount(1.2);
         transactionEntity.setType(1);
 
 
@@ -74,7 +74,7 @@ public class TransactionServiceImplTest {
         TransactionEntity transactionFound = new TransactionEntity();
         transactionFound.setId(1L);
         transactionFound.setType(1);
-        transactionFound.setAmount(3.6F);
+        transactionFound.setAmount(3.6);
         transactionFound.setDescription("Description");
 
         when(transactionRepository.findById(same(givendId)))
@@ -115,13 +115,13 @@ public class TransactionServiceImplTest {
         TransactionEntity transaction1 = new TransactionEntity();
         transaction1.setId(1L);
         transaction1.setDescription("description");
-        transaction1.setAmount(1.6F);
+        transaction1.setAmount(1.6);
         transaction1.setType(1);
 
         TransactionEntity transaction2 = new TransactionEntity();
         transaction2.setId(2L);
         transaction2.setDescription("description 2");
-        transaction2.setAmount(1.8F);
+        transaction2.setAmount(1.8);
         transaction2.setType(1);
 
         transactionEntityList.add(transaction1);
@@ -185,12 +185,11 @@ public class TransactionServiceImplTest {
         Long givenID = 1L;
         TransactionDto givenTransaction = new TransactionDto();
         givenTransaction.setDescription("Description");
-        givenTransaction.setAmount(1.5F);
+        givenTransaction.setAmount(1.5);
         givenTransaction.setType(TransactionTypeEnum.EXPEND);
 
         TransactionEntity transactionFound = new TransactionEntity();
         transactionFound.setId(1L);
-
         when(transactionRepository.findById(givenID)).thenReturn(Optional.of(transactionFound));
 
         TransactionEntity transactionToSave = new TransactionEntity();
@@ -198,8 +197,8 @@ public class TransactionServiceImplTest {
         transactionToSave.setDescription(givenTransaction.getDescription());
         transactionToSave.setAmount(givenTransaction.getAmount());
         transactionToSave.setType(1);
-
         when(transactionRepository.save(any(TransactionEntity.class))).thenReturn(transactionToSave);
+
         //test
         TransactionDto result = transactionService.update(givenID, givenTransaction);
 
@@ -214,7 +213,7 @@ public class TransactionServiceImplTest {
         Long givenID = 1L;
         TransactionDto givenTransaction = new TransactionDto();
         givenTransaction.setDescription("Description");
-        givenTransaction.setAmount(1.5F);
+        givenTransaction.setAmount(1.5);
 
         TransactionEntity transactionFound = new TransactionEntity();
         transactionFound.setId(1L);
@@ -240,7 +239,7 @@ public class TransactionServiceImplTest {
         Long givenId = 1L;
         TransactionDto givenTransaction = new TransactionDto();
         givenTransaction.setDescription("Description");
-        givenTransaction.setAmount(1.5F);
+        givenTransaction.setAmount(1.5);
 
         when(transactionRepository.findById(givenId)).thenReturn(Optional.empty());
         //test

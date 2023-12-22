@@ -53,7 +53,9 @@ public class AccountServiceImpl implements AccountService {
         }
         AccountEntity existentAccount = accountRepository.findById(id)
                 .orElseThrow(() -> new Exception("El id que se quiere actalizar no existe: " + id));
+
         existentAccount.setName(accountDto.getName());
+
         if (Objects.nonNull(accountDto.getCurrency())) {
             existentAccount.setCurrency(accountDto.getCurrency().getCurrencyCode());
         }

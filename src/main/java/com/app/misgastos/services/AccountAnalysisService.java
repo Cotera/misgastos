@@ -29,7 +29,7 @@ public class AccountAnalysisService {
     }
 
     public AccountDto getAccountDataComplete(AccountDto account) throws Exception {
-        if (isNull(account)){
+        if (isNull(account)) {
             throw new Exception("Cuenta no válida");
         }
         return this.getAccountDataComplete(account.getId());

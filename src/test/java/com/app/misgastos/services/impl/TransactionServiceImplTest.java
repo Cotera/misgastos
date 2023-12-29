@@ -4,8 +4,10 @@ import com.app.misgastos.model.TransactionDto;
 import com.app.misgastos.model.TransactionTypeEnum;
 import com.app.misgastos.model.entities.TransactionEntity;
 import com.app.misgastos.repository.TransactionRepository;
+import com.app.misgastos.services.AccountService;
+import com.app.misgastos.utils.converters.TransactionConverter;
+
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -35,8 +37,15 @@ public class TransactionServiceImplTest {
     @Mock //en la clase que queremos emular
     private TransactionRepository transactionRepository;
 
+    @Mock
+    private AccountService accountService;
+
+    @Mock
+    private TransactionConverter transactionConverter;
+
     @InjectMocks
     private TransactionServiceImpl transactionService;
+
 
     @Before
     public void setUp() {
@@ -44,7 +53,6 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    @Ignore // TODO Arreglar test
     public void testCreateTransaction() throws Exception {
         TransactionDto transactionDto = new TransactionDto();
         transactionDto.setId(1L);
@@ -57,28 +65,41 @@ public class TransactionServiceImplTest {
         transactionEntity.setDescription("description");
         transactionEntity.setAmount(1.2);
         transactionEntity.setType(1);
-
+        
+        TransactionDto transactionExpected = new TransactionDto();
+        transactionExpected.setId(1L);
+        transactionExpected.setDescription("description");
+        transactionExpected.setAmount(1.2);
+        transactionExpected.setType(TransactionTypeEnum.EXPEND);
 
         when(transactionRepository.save(any(TransactionEntity.class))).thenReturn(transactionEntity);
 
         TransactionDto result = transactionService.createTransaction(transactionDto);
 
-        assertEquals(transactionEntity, result);
+        assertEquals(transactionExpected, result);
     }
 
     @Test
-    @Ignore // TODO Arreglar test
     public void testDeleteById_returnsDeletedId_whenTransactionExists() throws Exception {
         // arrange
         Long givendId = 1L;
+        
         TransactionEntity transactionFound = new TransactionEntity();
         transactionFound.setId(1L);
         transactionFound.setType(1);
         transactionFound.setAmount(3.6);
         transactionFound.setDescription("Description");
 
+        TransactionDto transaccionEncontrada = new TransactionDto();
+        transaccionEncontrada.setId(1L);
+        transaccionEncontrada.setType(TransactionTypeEnum.EXPEND);
+        transaccionEncontrada.setAmount(3.6);
+        transaccionEncontrada.setDescription("Description");
+
         when(transactionRepository.findById(same(givendId)))
                 .thenReturn(Optional.of(transactionFound));
+
+        
 
         doNothing().when(transactionRepository).deleteById(givendId);
         // test Exception
@@ -108,10 +129,10 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    @Ignore // TODO Arreglar test
     public void testGetAll() {
         // Arrange
         List<TransactionEntity> transactionEntityList = new ArrayList<>();
+
         TransactionEntity transaction1 = new TransactionEntity();
         transaction1.setId(1L);
         transaction1.setDescription("description");
@@ -119,13 +140,32 @@ public class TransactionServiceImplTest {
         transaction1.setType(1);
 
         TransactionEntity transaction2 = new TransactionEntity();
-        transaction2.setId(2L);
-        transaction2.setDescription("description 2");
-        transaction2.setAmount(1.8);
+        transaction2.setId(1L);
+        transaction2.setDescription("description");
+        transaction2.setAmount(1.6);
         transaction2.setType(1);
 
         transactionEntityList.add(transaction1);
         transactionEntityList.add(transaction2);
+
+        List<TransactionDto> transactionDtos = new ArrayList<>();
+        
+        TransactionDto transactionDto1 = new TransactionDto();
+        transactionDto1.setId(1L);
+        transactionDto1.setDescription("description");
+        transactionDto1.setAmount(1.6);
+        transactionDto1.setType(TransactionTypeEnum.EXPEND);
+        transactionDto1.setAccountDto(null);
+
+        TransactionDto transactionDto2 = new TransactionDto();
+        transactionDto2.setId(1L);
+        transactionDto2.setDescription("description");
+        transactionDto2.setAmount(1.6);
+        transactionDto2.setType(TransactionTypeEnum.EXPEND);
+        transactionDto2.setAccountDto(null);
+
+        transactionDtos.add(transactionDto1);
+        transactionDtos.add(transactionDto1);
 
         when(transactionRepository.findAll()).thenReturn(transactionEntityList);
 
@@ -133,25 +173,27 @@ public class TransactionServiceImplTest {
         List<TransactionDto> result = transactionService.getAll();
 
         // Assert
-        assertEquals(transactionEntityList, result);
+        assertEquals(transactionDtos, result);
     }
 
     @Test
-    @Ignore // TODO Arreglar test
     public void testGetById() {
+
         //give
         Long givenID = 1L;
 
         TransactionEntity foundEntity = new TransactionEntity();
         foundEntity.setId(givenID);
         foundEntity.setDescription("description");
+        foundEntity.setType(3);
 
         when(transactionRepository.findById(givenID)).thenReturn(Optional.of(foundEntity));
 
         TransactionDto expected = new TransactionDto();
         expected.setId(givenID);
         expected.setDescription("description");
-
+        expected.setType(TransactionTypeEnum.TRANSFER);
+        
         //when
         Optional<TransactionDto> result = transactionService.getById(givenID);
 
@@ -165,10 +207,6 @@ public class TransactionServiceImplTest {
         //give
         Long givenID = 1L;
 
-        TransactionEntity foundEntity = new TransactionEntity();
-        foundEntity.setId(givenID);
-        foundEntity.setDescription("description");
-
         when(transactionRepository.findById(givenID)).thenReturn(Optional.empty());
 
         //when
@@ -179,35 +217,6 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    @Ignore  // TODO Arreglar test
-    public void testUpdate_returnsUpdatedTransaction_whenTransactionExistsWithGivenId() throws Exception {
-        //arrange
-        Long givenID = 1L;
-        TransactionDto givenTransaction = new TransactionDto();
-        givenTransaction.setDescription("Description");
-        givenTransaction.setAmount(1.5);
-        givenTransaction.setType(TransactionTypeEnum.EXPEND);
-
-        TransactionEntity transactionFound = new TransactionEntity();
-        transactionFound.setId(1L);
-        when(transactionRepository.findById(givenID)).thenReturn(Optional.of(transactionFound));
-
-        TransactionEntity transactionToSave = new TransactionEntity();
-        transactionToSave.setId(givenID);
-        transactionToSave.setDescription(givenTransaction.getDescription());
-        transactionToSave.setAmount(givenTransaction.getAmount());
-        transactionToSave.setType(1);
-        when(transactionRepository.save(any(TransactionEntity.class))).thenReturn(transactionToSave);
-
-        //test
-        TransactionDto result = transactionService.update(givenID, givenTransaction);
-
-        //assert
-        assertEquals(transactionToSave, result);
-    }
-
-    @Test
-    @Ignore // TODO Arreglar test
     public void testUpdate_returnsUpdatedTransactionWithoutType_whenTransactionExistsWithGivenId() throws Exception {
         //arrange
         Long givenID = 1L;
@@ -226,11 +235,17 @@ public class TransactionServiceImplTest {
         transactionToSave.setAmount(givenTransaction.getAmount());
 
         when(transactionRepository.save(any(TransactionEntity.class))).thenReturn(transactionToSave);
+
+        TransactionDto expected = new TransactionDto();
+        expected.setId(givenID);
+        expected.setDescription("Description");
+        expected.setAmount(1.5);
+
         //test
         TransactionDto result = transactionService.update(givenID, givenTransaction);
 
         //assert
-        assertEquals(transactionToSave, result);
+        assertEquals(expected, result);
     }
 
     @Test

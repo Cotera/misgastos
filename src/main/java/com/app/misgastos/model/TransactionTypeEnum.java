@@ -30,7 +30,10 @@ public enum TransactionTypeEnum {
         this.description = description;
     }
 
-    public static TransactionTypeEnum getFromId(int v){
+    public static TransactionTypeEnum getFromId(Integer v){
+        if (v == null) {
+            return null;
+        }
         switch (v) {
             case 1:
                 return TransactionTypeEnum.EXPEND;

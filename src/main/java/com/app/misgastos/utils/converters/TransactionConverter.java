@@ -20,7 +20,7 @@ public abstract class TransactionConverter {
         dto.setId(entity.getId());
         dto.setDescription(entity.getDescription());
         dto.setAmount(entity.getAmount());
-        dto.setType(TransactionTypeEnum.getFromId(entity.getType()));
+        dto.setType(TransactionTypeEnum.getFromId(entity.getType()));       
 
         return dto;
     }

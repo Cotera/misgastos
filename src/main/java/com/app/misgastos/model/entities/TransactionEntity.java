@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.app.misgastos.model.TransactionTypeEnum;
+
 @Entity
 @Table(name = "TRANSACTION")
 @Data

@@ -79,10 +79,6 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionConverter.toDto(transactionRepository.save(saveTransaction));
     }
 
-    public void transfotmarObjeto(){
-
-    }
-
     @Override
     public List<TransactionDto> getAllTransactionsByAccount(Long accountId) {
         return TransactionConverter.toDtos(transactionRepository.getByAccountId(accountId));

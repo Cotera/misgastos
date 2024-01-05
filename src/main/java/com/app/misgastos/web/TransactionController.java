@@ -2,6 +2,8 @@ package com.app.misgastos.web;
 
 import com.app.misgastos.model.TransactionDto;
 import com.app.misgastos.services.impl.TransactionServiceImpl;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -44,5 +47,22 @@ public class TransactionController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<List<TransactionDto>> getAll() {
+        List<TransactionDto> transactionDtos = transactionService.getAll();
+        // ResponseEntity<List<TransactionDto>> responseEntity = new ResponseEntity<>(transactionDtos, HttpStatus.);
+        return ResponseEntity.ok(transactionDtos);        
+    }
 
+    public ResponseEntity<TransactionDto> delete(Long id) {
+        try {
+            transactionService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();                        
+        }
+    }
+
+    //TODO CREAR EXCEPCIONES CUSTOM 
+    //TODO UPDATE
 }

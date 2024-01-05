@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -25,8 +26,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -43,6 +46,7 @@ public class TransactionServiceImplTest {
     @Mock
     private TransactionConverter transactionConverter;
 
+    @Spy
     @InjectMocks
     private TransactionServiceImpl transactionService;
 
@@ -74,6 +78,7 @@ public class TransactionServiceImplTest {
 
         when(transactionRepository.save(any(TransactionEntity.class))).thenReturn(transactionEntity);
 
+
         TransactionDto result = transactionService.createTransaction(transactionDto);
 
         assertEquals(transactionExpected, result);
@@ -83,12 +88,6 @@ public class TransactionServiceImplTest {
     public void testDeleteById_returnsDeletedId_whenTransactionExists() throws Exception {
         // arrange
         Long givendId = 1L;
-        
-        TransactionEntity transactionFound = new TransactionEntity();
-        transactionFound.setId(1L);
-        transactionFound.setType(1);
-        transactionFound.setAmount(3.6);
-        transactionFound.setDescription("Description");
 
         TransactionDto transaccionEncontrada = new TransactionDto();
         transaccionEncontrada.setId(1L);
@@ -96,10 +95,8 @@ public class TransactionServiceImplTest {
         transaccionEncontrada.setAmount(3.6);
         transaccionEncontrada.setDescription("Description");
 
-        when(transactionRepository.findById(same(givendId)))
-                .thenReturn(Optional.of(transactionFound));
-
-        
+        doReturn(Optional.of(transaccionEncontrada))
+                .when(transactionService).getById(givendId);      
 
         doNothing().when(transactionRepository).deleteById(givendId);
         // test Exception
@@ -108,7 +105,6 @@ public class TransactionServiceImplTest {
         // assert
         assertEquals(givendId, result);
         verify(transactionRepository, times(1)).deleteById(givendId);
-        verify(transactionRepository, times(1)).findById(givendId);
         verifyNoMoreInteractions(transactionRepository);
     }
 
@@ -117,15 +113,15 @@ public class TransactionServiceImplTest {
         // arrange
         Long givenId = 1L;
 
-        when(transactionRepository.findById(givenId)).thenReturn(Optional.empty());
+        doReturn(Optional.empty())
+                .when(transactionService).getById(givenId);
 
         // test
         Exception result = assertThrows(Exception.class, () -> transactionService.deleteById(givenId));
 
         // assert
         assertEquals("No existe transacción " + givenId, result.getMessage());
-        verify(transactionRepository, times(1)).findById(givenId);
-        verifyNoMoreInteractions(transactionRepository);
+        verifyNoInteractions(transactionRepository);
     }
 
     @Test
@@ -217,7 +213,7 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    public void testUpdate_returnsUpdatedTransactionWithoutType_whenTransactionExistsWithGivenId() throws Exception {
+    public void testUpdate_returnsUpdatedTransaction_whenTransactionExistsWithGivenId() throws Exception {
         //arrange
         Long givenID = 1L;
         TransactionDto givenTransaction = new TransactionDto();
@@ -227,14 +223,15 @@ public class TransactionServiceImplTest {
         TransactionEntity transactionFound = new TransactionEntity();
         transactionFound.setId(1L);
 
-        when(transactionRepository.findById(givenID)).thenReturn(Optional.of(transactionFound));
+        doReturn(Optional.of(transactionFound)).when(transactionService).getById(givenID);
 
         TransactionEntity transactionToSave = new TransactionEntity();
         transactionToSave.setId(givenID);
         transactionToSave.setDescription(givenTransaction.getDescription());
         transactionToSave.setAmount(givenTransaction.getAmount());
 
-        when(transactionRepository.save(any(TransactionEntity.class))).thenReturn(transactionToSave);
+        
+        doReturn(transactionToSave).when(transactionRepository).save(any(TransactionEntity.class));
 
         TransactionDto expected = new TransactionDto();
         expected.setId(givenID);
@@ -255,15 +252,14 @@ public class TransactionServiceImplTest {
         TransactionDto givenTransaction = new TransactionDto();
         givenTransaction.setDescription("Description");
         givenTransaction.setAmount(1.5);
-
-        when(transactionRepository.findById(givenId)).thenReturn(Optional.empty());
+       
+        doReturn(Optional.empty()).when(transactionService).getById(givenId);
         //test
         Exception result = assertThrows(Exception.class, () -> transactionService.update(givenId, givenTransaction));
 
         //assert
         assertEquals("Error al Actualizar. No existe la transacción " + givenId, result.getMessage());
-        verify(transactionRepository, times(1)).findById(givenId);
-        verifyNoMoreInteractions(transactionRepository);
+        verifyNoInteractions(transactionRepository);
     }
 
 }

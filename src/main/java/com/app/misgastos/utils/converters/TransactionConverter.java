@@ -1,5 +1,6 @@
 package com.app.misgastos.utils.converters;
 
+import com.app.misgastos.model.AccountDto;
 import com.app.misgastos.model.TransactionDto;
 import com.app.misgastos.model.TransactionTypeEnum;
 import com.app.misgastos.model.entities.TransactionEntity;
@@ -20,7 +21,10 @@ public abstract class TransactionConverter {
         dto.setId(entity.getId());
         dto.setDescription(entity.getDescription());
         dto.setAmount(entity.getAmount());
-        dto.setType(TransactionTypeEnum.getFromId(entity.getType()));       
+        dto.setType(TransactionTypeEnum.getFromId(entity.getType()));
+        AccountDto account = new AccountDto();
+        account.setId(entity.getAccount());
+        dto.setAccountDto(account);
 
         return dto;
     }

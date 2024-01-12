@@ -15,8 +15,8 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
      *
      * @param id id del Account
      * @return Lista de TransactionEntity
-     */
+     *//*
     @Query("SELECT * FROM TRANSACTION " +
             "WHERE ACCOUNT = {}")
-    List<TransactionEntity> getByAccountId(Long id);
+    List<TransactionEntity> getByAccountId(Long id);*/
 }

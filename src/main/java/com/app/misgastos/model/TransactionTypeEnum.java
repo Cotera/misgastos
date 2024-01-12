@@ -1,7 +1,7 @@
 package com.app.misgastos.model;
 
 public enum TransactionTypeEnum {
-    EXPEND(1, "Expent"),
+    EXPEND(1, "Expend"),
     INCOME (2, "Income"),
     TRANSFER (3, "Transfer");
 

@@ -20,6 +20,7 @@ public class AccountConverter {
         if (Objects.nonNull(entity.getCurrency())) {
             dto.setCurrency(Currency.getInstance(entity.getCurrency()));
         }
+        dto.setInitialBalance(entity.getInitialBalance());
         dto.setTransactions(null);
         return dto;
     }
@@ -32,6 +33,7 @@ public class AccountConverter {
         entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setCurrency(dto.getCurrency().getCurrencyCode());
+        entity.setInitialBalance(dto.getInitialBalance());
         return entity;
     }
 

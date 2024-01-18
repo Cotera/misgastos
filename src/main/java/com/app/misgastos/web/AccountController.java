@@ -28,7 +28,6 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-
     @PostMapping
     public ResponseEntity<AccountDto> create(@RequestBody AccountDto accountDto){
         AccountDto createdAccount = accountService.createAccount(accountDto).orElse(null);

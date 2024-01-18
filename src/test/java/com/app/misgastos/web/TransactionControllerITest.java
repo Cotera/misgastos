@@ -15,13 +15,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -53,10 +56,10 @@ public class TransactionControllerITest {
         transaction2.setId(2L);
 
         List<TransactionDto> list = List.of(transaction1, transaction2);
-        when(transactionService.getAll())
-                .thenReturn(list);
+        when(transactionService.getAll()).thenReturn(list);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/transaction"))
+        mockMvc.perform(get("/transaction"))
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(list)));
     }
@@ -69,15 +72,19 @@ public class TransactionControllerITest {
         givenBody.setAmount(34.20);
 
         TransactionDto updated = new TransactionDto();
+        updated.setId(1L);
+        updated.setDescription("transaction1");
+        updated.setAmount(34.20);
 
         when(transactionService.update(givenId, givenBody))
                 .thenReturn(updated);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/transaction/{id}", givenId)
+        mockMvc.perform(put("/transaction/{id}", givenId)
                 .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(Charset.defaultCharset())
                 .content(objectMapper.writeValueAsString(givenBody)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(updated)));
     }
 }

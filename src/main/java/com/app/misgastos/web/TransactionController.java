@@ -56,7 +56,7 @@ public class TransactionController {
     @GetMapping
     public ResponseEntity<List<TransactionDto>> getAll() {
         List<TransactionDto> transactionDtos = transactionService.getAll();
-        // ResponseEntity<List<TransactionDto>> responseEntity = new ResponseEntity<>(transactionDtos, HttpStatus.OK);
+        // return new ResponseEntity<>(transactionDtos, HttpStatus.OK);
         return ResponseEntity.ok(transactionDtos);
     }
 
